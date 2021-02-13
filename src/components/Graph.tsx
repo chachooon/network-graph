@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ReactDOM from "react-dom";
 import * as d3 from "d3";
 import {
@@ -11,7 +11,7 @@ import {
   forceCenter,
 } from "d3-force";
 import { Rect, Circle } from "./Node";
-
+import { Node } from "model";
 interface Props {
   radius: number;
   nodes: Array<any>;
@@ -48,73 +48,25 @@ export default function Graph(props: Props) {
       .on("tick", () => {
         setNodes(nodes);
         setLinks(tempLinks);
-      });
-    // .on("end", () => console.log("simulation end"));
+      })
+      .on("end", () => console.log("simulation end"));
 
-    // function dragstarted(d) {
-    //   if (!d3.event.active) simulation.alphaTarget(0.3).restart(); //sets the current target alpha to the specified number in the range [0,1].
-    //   d.fy = d.y; //fx - the node’s fixed x-position. Original is null.
-    //   d.fx = d.x; //fy - the node’s fixed y-position. Original is null.
-    // }
-
-    // //When the drag gesture starts, the targeted node is fixed to the pointer
-    // function dragged(d) {
-    //   d.fx = d3.event.x;
-    //   d.fy = d3.event.y;
-    // }
-
-    // //the targeted node is released when the gesture ends
-    // function dragended(d) {
-    //   if (!d3.event.active) simulation.alphaTarget(0);
-    //   d.fx = null;
-    //   d.fy = null;
-
-    //   console.log("dataset after dragged is ...", dataset);
-    // }
     return () => {
       simulation.stop();
     };
   }, []);
 
-  function _nodeDependedOn(node: any) {
-    let dependedOn = false;
-
-    nodes.forEach((n) => {
-      dependedOn = dependedOn || n.dependsOn.includes(node.id);
-    });
-
-    return dependedOn;
-  }
-
-  function _getMaxPath() {
-    const terminations: any[] = [];
-    nodes.forEach((node) => {
-      if (!_nodeDependedOn(node)) {
-        terminations.push(node);
-      }
-    });
-
-    return Math.max(...terminations.map((node) => _calcPath(node)));
-  }
-
-  /**
-   * Recursively calculates the **longest** path in our tree
-   */
-  function _calcPath(node: any, length = 1) {
-    // end case
-    if (!node.dependsOn || node.dependsOn.length < 1) {
-      return length;
-    }
-
-    return Math.max(
-      ...node.dependsOn.map((id: any) =>
-        _calcPath(
-          nodes.find((n) => n.id === id),
-          length + 1
-        )
-      )
+  const handleDragged = useCallback((id: number, event: DragEvent) => {
+    setNodes(
+      nodes.map((n) => {
+        if (n.id === id) {
+          n.x = event.x;
+          n.y = event.y;
+        }
+        return n;
+      })
     );
-  }
+  }, []);
 
   return (
     <svg className="container" height={h} width={w}>
@@ -135,12 +87,14 @@ export default function Graph(props: Props) {
           />
         </marker>
       </defs>
-
-      {/* Our visualization should go here. */}
       <g>
         {nodes.map((node, idx) => (
           <g key={idx}>
-            {node.type === "rect" ? <Rect {...node} /> : <Circle {...node} />}
+            {node.type === "rect" ? (
+              <Rect {...node} onChange={handleDragged} />
+            ) : (
+              <Circle {...node} onChange={handleDragged} />
+            )}
             <text textAnchor="middle" x={node.x} y={node.y}>
               {node.name}
             </text>

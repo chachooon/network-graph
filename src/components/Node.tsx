@@ -1,13 +1,18 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-export function Rect({ x, y, size }: any) {
+interface Props {
+  id: string | number;
+  x: number;
+  y: number;
+  size: number;
+  onChange: Function;
+}
+export function Rect({ id, x, y, size, onChange }: Props) {
   const wrapper = useRef<SVGRectElement>();
 
   useEffect(() => {
-    const handleDrag = d3.drag().on("drag", function (event) {
-      d3.select(this).attr("x", event.x).attr("y", event.y);
-    });
+    const handleDrag = d3.drag().on("drag", (event) => onChange(id, event));
     handleDrag(d3.select(wrapper.current));
   }, []);
 
@@ -24,13 +29,11 @@ export function Rect({ x, y, size }: any) {
   );
 }
 
-export function Circle({ x, y, size }: any) {
+export function Circle({ id, x, y, size, onChange }: Props) {
   const wrapper = useRef<SVGCircleElement>();
 
   useEffect(() => {
-    const handleDrag = d3.drag().on("drag", function (event) {
-      d3.select(this).attr("x", event.x).attr("y", event.y);
-    });
+    const handleDrag = d3.drag().on("drag", (event) => onChange(id, event));
     handleDrag(d3.select(wrapper.current));
   }, []);
 
