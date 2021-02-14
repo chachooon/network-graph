@@ -4,33 +4,19 @@ import normalize from "emotion-normalize";
 import { css, Global } from "@emotion/react";
 import { PortalProvider } from "providers/PortalProvider";
 import Graph from "components/Graph";
-// import useSimulation from "./hooks/useSimulation";
-import * as d3 from "d3";
-const width = 500;
-const height = 500;
-
-const Link = ({ link }: any) => {
-  const path: any = d3.path();
-  path.moveTo(link.source.x + 10, link.source.y + 10);
-  path.lineTo(link.target.x + 10, link.target.y + 10);
-
-  return (
-    <marker
-      id="arrow"
-      markerWidth="40"
-      markerHeight="30"
-      refX="25"
-      refY="-5"
-      orient="auto"
-      markerUnits="userSpaceOnUse"
-      overflow="visible"
-    >
-      <path stroke="blue" strokeWidth="1" d={path} />
-    </marker>
-  );
-};
+import { InputData, NodesData, Link, Node } from "model";
 
 export default function App() {
+  const [data, setData] = useState<InputData[]>([
+    {
+      left: { id: "N1", name: "N1", size: 10, type: "circle" },
+      right: { id: "N2", name: "N2", size: 10, type: "circle" },
+      center: { id: "C1", name: "C1", size: 10, type: "rect" },
+      bottom: { id: "N3", name: "N3", size: 10, type: "circle" },
+    },
+  ]);
+  const [nodesData, setNodesData] = useState<NodesData>(makeData(data));
+
   return (
     <PortalProvider>
       <Global
@@ -52,26 +38,36 @@ export default function App() {
             width: "100%",
           }}
         >
-          <Graph
-            radius={100}
-            nodes={[
-              { id: 1, name: "node 1", dependsOn: [], type: "rect", size: 30 },
-              { id: 7, name: "node 7", dependsOn: [], type: "rect", size: 30 },
-              { id: 2, name: "node 2", dependsOn: [1], type: "rect", size: 30 },
-              { id: 3, name: "node 3", dependsOn: [2], type: "rect", size: 30 },
-              { id: 4, name: "node 4", dependsOn: [2], type: "rect", size: 30 },
-              {
-                id: 5,
-                name: "node 5",
-                dependsOn: [4, 7],
-                type: "rect",
-                size: 30,
-              },
-              { id: 6, name: "node 6", dependsOn: [5], type: "rect", size: 30 },
-            ]}
-          />
+          <Graph nodesData={nodesData} />
         </div>
       </Container>
     </PortalProvider>
   );
+}
+
+function makeData(inputData: InputData[]): NodesData {
+  const nodeSet = new Set<Node>();
+  const nodeTypeCheck = new Set<string>();
+  const links: Link[] = [];
+
+  inputData.forEach((data) => {
+    ["left", "right", "center", "bottom"].forEach((key) => {
+      const node = { ...data[key] };
+      if (nodeTypeCheck.has(`${node.id}_${key}_${node.size}`)) {
+        node.id = `${node.id}_${key}_${node.size}`;
+      }
+
+      nodeTypeCheck.add(node.id);
+      nodeSet.add(node);
+
+      if (key === "bottom") {
+        links.push({ source: data["center"], target: node });
+      }
+      if (key === "left" || key === "right") {
+        links.push({ source: node, target: data["center"] });
+      }
+    });
+  });
+
+  return { nodes: Array.from(nodeSet), links };
 }

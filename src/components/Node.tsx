@@ -1,11 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
-
-interface Props {
-  id: string | number;
-  x: number;
-  y: number;
-  size: number;
+import { InputData, NodesData, Link, Node } from "../model";
+interface Props extends Node {
   onChange: Function;
 }
 export function Rect({ id, x, y, size, onChange }: Props) {
