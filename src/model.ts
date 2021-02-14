@@ -5,23 +5,8 @@ export interface Node extends SimulationNodeDatum {
   name: string;
   size?: number;
   type?: "rect" | "circle";
+  dependsOn?: string[];
 }
-export interface Link extends SimulationLinkDatum<SimulationNodeDatum> {
-  type?: "left" | "right" | "bottom";
-}
-export interface NodesData {
-  nodes: Node[];
-  links: Link[];
-}
-// export interface InputData {
-//   L_Node: string;
-//   L_Weight: number;
-//   R_Node: string;
-//   R_Weight: number;
-//   Condition: string;
-//   F_Node: string;
-//   F_Weight: number;
-// }
 
 export interface InputData {
   left: Node;

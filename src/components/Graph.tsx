@@ -7,20 +7,33 @@ import {
   forceSimulation,
   SimulationNodeDatum,
   SimulationLinkDatum,
-  Simulation,
 } from "d3-force";
 import { Rect, Circle } from "./Node";
-import { NodesData, Node, Link } from "../model";
+import { Node } from "../model";
 
-const Graph: React.FC<{ nodesData: NodesData }> = ({ nodesData }) => {
+const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [nodes, setNodes] = useState<Node[]>([...nodesData.nodes]);
-  const [links, setLinks] = useState<Link[]>([...nodesData.links]);
+  const [nodes, setNodes] = useState<Node[]>([...nodesData]);
+  const [links, setLinks] = useState<
+    SimulationLinkDatum<SimulationNodeDatum>[]
+  >([]);
 
   const w = 1200,
     h = 1200;
   useEffect(() => {
-    const simulation = forceSimulation(nodesData.nodes)
+    setIsLoading(true);
+    const links: SimulationLinkDatum<SimulationNodeDatum>[] = [];
+    nodesData
+      .filter((x) => x.dependsOn.length > 0)
+      .forEach((node: Node) => {
+        node.dependsOn.forEach((source: string) => {
+          links.push({
+            source: source,
+            target: node.id,
+          });
+        });
+      });
+    const simulation = forceSimulation(nodesData)
       .force(
         "link",
         forceLink()
@@ -32,7 +45,6 @@ const Graph: React.FC<{ nodesData: NodesData }> = ({ nodesData }) => {
       .force("center", forceCenter(w / 2, h / 2))
       .force("collide", forceCollide(50))
       .force("charge", forceManyBody().strength(-1500));
-
     simulation.on("tick", () => {
       setNodes([...simulation.nodes()]);
     });
@@ -41,7 +53,6 @@ const Graph: React.FC<{ nodesData: NodesData }> = ({ nodesData }) => {
       setLinks(links);
       setIsLoading(false);
     });
-
     return () => {
       simulation.stop();
     };
@@ -92,7 +103,6 @@ const Graph: React.FC<{ nodesData: NodesData }> = ({ nodesData }) => {
           </g>
         ))}
         {links.map((link, index) => {
-          console.log(link);
           return (
             <line
               x1={link.source["x"]}
