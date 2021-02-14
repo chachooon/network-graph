@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
   forceLink,
-  forceCenter,
-  forceCollide,
   forceManyBody,
   forceSimulation,
   SimulationNodeDatum,
@@ -18,8 +16,6 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
     SimulationLinkDatum<SimulationNodeDatum>[]
   >([]);
 
-  const w = 1200,
-    h = 1200;
   useEffect(() => {
     setIsLoading(true);
     const links: SimulationLinkDatum<SimulationNodeDatum>[] = [];
@@ -42,9 +38,7 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
           .distance(100)
           .strength(0.9)
       )
-      .force("center", forceCenter(w / 2, h / 2))
-      .force("collide", forceCollide(50))
-      .force("charge", forceManyBody().strength(-1500));
+      .force("charge", forceManyBody().strength(-700));
     simulation.on("tick", () => {
       setNodes([...simulation.nodes()]);
     });
@@ -71,7 +65,13 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
   }, []);
 
   return (
-    <svg className="container" height={h} width={w}>
+    <svg
+      className="container"
+      height="500"
+      width="500"
+      style={{ border: "1px solid #000" }}
+      viewBox={getViewBox(nodes)}
+    >
       <defs>
         <marker
           id="suit"
@@ -119,4 +119,23 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
     </svg>
   );
 };
+function getViewBox(
+  nodes: SimulationNodeDatum[],
+  padding: number = 0.1
+): string {
+  const size =
+    (1 + padding) *
+    Math.max(
+      Math.max(...nodes.map((x) => Math.abs(x.x!))),
+      Math.max(...nodes.map((x) => Math.abs(x.y!)))
+    );
+  const viewBox = {
+    cx: -size,
+    cy: -size,
+    height: size * 2,
+    width: size * 2,
+  };
+  return `${viewBox.cx} ${viewBox.cy} ${viewBox.width} ${viewBox.height}`;
+}
+
 export default Graph;

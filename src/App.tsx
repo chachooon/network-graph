@@ -9,19 +9,19 @@ import { InputData, Node } from "model";
 export default function App() {
   const [data, setData] = useState<InputData[]>([
     {
-      left: { id: "N1", name: "N1", size: 10, type: "circle", dependsOn: [] },
-      right: { id: "N2", name: "N2", size: 10, type: "circle", dependsOn: [] },
+      left: { id: "N1", name: "N1", size: 30, type: "circle", dependsOn: [] },
+      right: { id: "N2", name: "N2", size: 30, type: "circle", dependsOn: [] },
       center: {
         id: "C1",
         name: "C1",
-        size: 10,
+        size: 30,
         type: "rect",
         dependsOn: ["N1", "N2"],
       },
       bottom: {
         id: "N3",
         name: "N3",
-        size: 10,
+        size: 30,
         type: "circle",
         dependsOn: ["C1"],
       },
@@ -31,27 +31,9 @@ export default function App() {
 
   return (
     <PortalProvider>
-      <Global
-        styles={css`
-          ${normalize}
-          h1, h2, h3, h4, h5, h6 {
-            font-size: 1em;
-            font-weight: normal;
-            margin: 0; /* or ‘0 0 1em’ if you’re so inclined */
-          }
-        `}
-      />
       <Container>
-        <div
-          style={{
-            fontFamily: "sans-serif",
-            textAlign: "center",
-            height: "100%",
-            width: "100%",
-          }}
-        >
-          <Graph nodesData={nodesData} />
-        </div>
+        <h1>그래프 구현 과제</h1>
+        <Graph nodesData={nodesData} />
       </Container>
     </PortalProvider>
   );
