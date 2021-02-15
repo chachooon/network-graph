@@ -5,9 +5,15 @@ interface Props {
   theadData: string[];
   tbodyData: InputData[];
   onChange: Function;
+  onDelete: Function;
 }
 
-export default function Table({ theadData, tbodyData, onChange }: Props) {
+export default function Table({
+  theadData,
+  tbodyData,
+  onChange,
+  onDelete,
+}: Props) {
   return (
     <table>
       <thead>
@@ -15,6 +21,7 @@ export default function Table({ theadData, tbodyData, onChange }: Props) {
           {theadData.map((item: string) => {
             return <th key={item}>{item}</th>;
           })}
+          <th key="del">삭제</th>
         </tr>
       </thead>
       <tbody>
@@ -82,6 +89,15 @@ export default function Table({ theadData, tbodyData, onChange }: Props) {
                       onChange(idx, "F_Weight", e.target.value);
                     }}
                   />
+                </td>
+                <td key="del">
+                  <button
+                    onClick={() => {
+                      onDelete(idx);
+                    }}
+                  >
+                    X
+                  </button>
                 </td>
               </tr>
             );

@@ -6,7 +6,7 @@ interface Props extends Node {
   id: string;
   onChange: Function;
 }
-export function Rect({ id, x, y, size, onChange }: Props) {
+export function Rect({ id, x, y, size = 50, onChange }: Props) {
   const wrapper = useRef<SVGRectElement>();
 
   useEffect(() => {

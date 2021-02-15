@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
   forceLink,
+  forceCenter,
   forceManyBody,
   forceSimulation,
   SimulationNodeDatum,
@@ -19,17 +20,15 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
   useEffect(() => {
     setIsLoading(true);
     const links: SimulationLinkDatum<SimulationNodeDatum>[] = [];
-    nodesData
-      //   .filter((x) => x.dependsOn.length > 0)
-      .forEach((node: Node) => {
-        console.log("generate node link", node);
-        node.dependsOn.forEach((source: string) => {
-          links.push({
-            source: source,
-            target: node.id,
-          });
+    nodesData.forEach((node: Node) => {
+      console.log("generate node link", node);
+      node.dependsOn.forEach((source: string) => {
+        links.push({
+          source: source,
+          target: node.id,
         });
       });
+    });
     const simulation = forceSimulation(nodesData)
       .force(
         "link",
@@ -39,6 +38,7 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
           .distance(100)
           .strength(0.9)
       )
+      .force("center", forceCenter())
       .force("charge", forceManyBody().strength(-700));
     simulation.on("tick", () => {
       setNodes([...simulation.nodes()]);
@@ -71,7 +71,7 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
     <svg
       className="container"
       height="500"
-      width="100%"
+      width="1000"
       style={{ border: "1px solid #000" }}
       viewBox={getViewBox(nodes)}
     >
@@ -94,7 +94,7 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
       </defs>
       <g>
         {isLoading ? (
-          <text textAnchor="middle" fontSize="20px">
+          <text textAnchor="middle" fontSize="100px">
             Simulating...
           </text>
         ) : (
@@ -140,11 +140,14 @@ function getViewBox(
       Math.max(...nodes.map((x) => Math.abs(x.x!))),
       Math.max(...nodes.map((x) => Math.abs(x.y!)))
     );
+  const sizeX = (1 + padding) * Math.max(...nodes.map((x) => Math.abs(x.x!)));
+  const sizeY = (1 + padding) * Math.max(...nodes.map((x) => Math.abs(x.y!)));
+
   const viewBox = {
-    cx: -size,
-    cy: -size,
-    height: size * 2,
-    width: size * 2,
+    cx: -sizeX,
+    cy: -sizeY,
+    height: sizeY * 2,
+    width: sizeX * 2,
   };
   return `${viewBox.cx} ${viewBox.cy} ${viewBox.width} ${viewBox.height}`;
 }
