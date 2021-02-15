@@ -1,3 +1,5 @@
+import styled from "@emotion/styled";
+import colors from "constants/colors";
 import { InputData } from "model";
 import Input from "./Input";
 
@@ -63,14 +65,7 @@ export default function Table({
                     }}
                   />
                 </td>
-                <td key="Condition">
-                  <Input
-                    value={item.center.name}
-                    onChange={(e) => {
-                      onChange(idx, "Condition", e.target.value);
-                    }}
-                  />
-                </td>
+                <Td key="Condition">{item.center.name}</Td>
                 <td key="F_Node">
                   <Input
                     value={item.bottom.name}
@@ -104,3 +99,9 @@ export default function Table({
     </table>
   );
 }
+const Td = styled.td`
+  background-color: ${colors.grey100};
+  color: ${colors.grey700};
+  margin: 10px;
+  width: 130px;
+`;

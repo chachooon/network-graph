@@ -84,27 +84,27 @@ export function makeData(inputData: InputData[]): Node[] {
 
 export const initialData: InputData[] = [
   {
-    left: { id: "", name: "N1", size: 30, dependsOn: [] },
-    right: { id: "", name: "N2", size: 30, dependsOn: [] },
+    left: { id: "", name: "N1", size: 40, dependsOn: [] },
+    right: { id: "", name: "N2", size: 45, dependsOn: [] },
     center: { id: "", name: "C1", dependsOn: ["N1", "N2"] },
-    bottom: { id: "", name: "N3", size: 30, dependsOn: ["C1"] },
+    bottom: { id: "", name: "N3", size: 50, dependsOn: ["C1"] },
   },
   {
-    left: { id: "", name: "N3", size: 30, dependsOn: [] },
-    right: { id: "", name: "N4", size: 30, dependsOn: [] },
+    left: { id: "", name: "N3", size: 50, dependsOn: [] },
+    right: { id: "", name: "N4", size: 45, dependsOn: [] },
     center: { id: "", name: "C2", dependsOn: ["N3", "N4"] },
-    bottom: { id: "", name: "N5", size: 30, dependsOn: ["C2"] },
+    bottom: { id: "", name: "N5", size: 40, dependsOn: ["C2"] },
   },
   {
-    left: { id: "", name: "N6", size: 30, dependsOn: [] },
-    right: { id: "", name: "N4", size: 30, dependsOn: [] },
+    left: { id: "", name: "N6", size: 40, dependsOn: [] },
+    right: { id: "", name: "N4", size: 40, dependsOn: [] },
     center: { id: "", name: "C3", dependsOn: ["N6", "N4"] },
-    bottom: { id: "", name: "N8", size: 30, dependsOn: ["C3"] },
+    bottom: { id: "", name: "N8", size: 50, dependsOn: ["C3"] },
   },
   {
-    left: { id: "", name: "N5", size: 30, dependsOn: [] },
-    right: { id: "", name: "N8", size: 30, dependsOn: [] },
+    left: { id: "", name: "N5", size: 45, dependsOn: [] },
+    right: { id: "", name: "N8", size: 45, dependsOn: [] },
     center: { id: "", name: "C4", dependsOn: ["N5", "N8"] },
-    bottom: { id: "", name: "N9", size: 30, dependsOn: ["C4"] },
+    bottom: { id: "", name: "N9", size: 50, dependsOn: ["C4"] },
   },
 ];

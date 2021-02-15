@@ -33,7 +33,6 @@ function Input({
           display: flex;
           justify-content: space-between;
           transition: background-color 0.2s ease;
-          background-color: ${colors.grey50};
           border-radius: 12px;
           align-items: center;
           box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.02);
