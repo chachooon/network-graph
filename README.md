@@ -15,4 +15,4 @@
 
 ### 화면
 
-![](demo.png)
+![](screenshot.png)
