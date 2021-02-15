@@ -20,8 +20,9 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
     setIsLoading(true);
     const links: SimulationLinkDatum<SimulationNodeDatum>[] = [];
     nodesData
-      .filter((x) => x.dependsOn.length > 0)
+      //   .filter((x) => x.dependsOn.length > 0)
       .forEach((node: Node) => {
+        console.log("generate node link", node);
         node.dependsOn.forEach((source: string) => {
           links.push({
             source: source,
@@ -47,6 +48,8 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
       setLinks(links);
       setIsLoading(false);
     });
+
+    console.log("links", links);
     return () => {
       simulation.stop();
     };
@@ -68,7 +71,7 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
     <svg
       className="container"
       height="500"
-      width="500"
+      width="100%"
       style={{ border: "1px solid #000" }}
       viewBox={getViewBox(nodes)}
     >
@@ -90,31 +93,39 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
         </marker>
       </defs>
       <g>
-        {nodes.map((node, idx) => (
-          <g key={idx}>
-            {node.type === "rect" ? (
-              <Rect {...node} onChange={handleDragged} />
-            ) : (
-              <Circle {...node} onChange={handleDragged} />
-            )}
-            <text textAnchor="middle" x={node.x} y={node.y}>
-              {node.name}
-            </text>
-          </g>
-        ))}
-        {links.map((link, index) => {
-          return (
-            <line
-              x1={link.source["x"]}
-              y1={link.source["y"]}
-              x2={link.target["x"]}
-              y2={link.target["y"]}
-              key={`line-${index}`}
-              stroke="#4679BD"
-              markerEnd="url(#suit)"
-            />
-          );
-        })}
+        {isLoading ? (
+          <text textAnchor="middle" fontSize="20px">
+            Simulating...
+          </text>
+        ) : (
+          <>
+            {nodes.map((node, idx) => (
+              <g key={idx}>
+                {node.type === "rect" ? (
+                  <Rect {...node} onChange={handleDragged} />
+                ) : (
+                  <Circle {...node} onChange={handleDragged} />
+                )}
+                <text textAnchor="middle" x={node.x} y={node.y}>
+                  {node.name}
+                </text>
+              </g>
+            ))}
+            {links.map((link, index) => {
+              return (
+                <line
+                  x1={link.source["x"]}
+                  y1={link.source["y"]}
+                  x2={link.target["x"]}
+                  y2={link.target["y"]}
+                  key={`line-${index}`}
+                  stroke="#4679BD"
+                  markerEnd="url(#suit)"
+                />
+              );
+            })}
+          </>
+        )}
       </g>
     </svg>
   );
