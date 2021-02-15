@@ -29,3 +29,11 @@ td {
   min-width: 50px;
   border: 1px solid #444444;
 }
+
+.border-input {
+  display: inline-block !important;
+  border: 1px solid #444444;
+}
+.input-label {
+  margin-right: 10px;
+}

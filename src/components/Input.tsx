@@ -7,6 +7,7 @@ function Input({
   type = "text",
   onFocus,
   onBlur,
+  name,
   ...inputAttrs
 }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
@@ -18,7 +19,7 @@ function Input({
           display: flex;
           justify-content: space-between;
           transition: background-color 0.2s ease;
-          border-radius: 12px;
+          border-radius: 2px;
           align-items: center;
           box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.02);
           font-weight: 500;
