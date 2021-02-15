@@ -26,6 +26,7 @@ export function Rect({ id, x, y, size = 70, fill = "#FFF", onChange }: Props) {
           height={size}
           fill={fill}
           stroke="#000"
+          style={{ cursor: "pointer" }}
         />
       )}
     </>
@@ -41,6 +42,14 @@ export function Circle({ id, x, y, size, fill = "#FFF", onChange }: Props) {
   }, []);
 
   return (
-    <circle ref={wrapper} cx={x} cy={y} r={size} fill={fill} stroke="#000" />
+    <circle
+      ref={wrapper}
+      cx={x}
+      cy={y}
+      r={size}
+      fill={fill}
+      stroke="#000"
+      style={{ cursor: "pointer" }}
+    />
   );
 }

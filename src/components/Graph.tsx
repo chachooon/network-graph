@@ -20,9 +20,10 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
   >([]);
 
   useEffect(() => {
+    console.log(123);
     setIsLoading(true);
     const links: SimulationLinkDatum<SimulationNodeDatum>[] = [];
-    nodesData.forEach((node: Node) => {
+    nodes.forEach((node: Node) => {
       node.dependsOn.forEach((source: string) => {
         links.push({
           source: source,
@@ -30,7 +31,7 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
         });
       });
     });
-    const simulation = forceSimulation(nodesData)
+    const simulation = forceSimulation(nodes)
       .force(
         "link",
         forceLink()
