@@ -20,6 +20,7 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
   >([]);
 
   useEffect(() => {
+    console.log(nodesData);
     setIsLoading(true);
     const links: SimulationLinkDatum<SimulationNodeDatum>[] = [];
     nodesData.forEach((node: Node) => {
@@ -39,7 +40,7 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
           .distance(10)
       )
       .force("center", forceCenter())
-      .force("collide", forceCollide(60));
+      .force("collide", forceCollide(80));
     simulation.on("tick", () => {
       setNodes([...simulation.nodes()]);
     });
@@ -106,45 +107,49 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
             </defs>
 
             <g>
-              {nodes.map((node, idx) => (
-                <g key={idx}>
-                  {node.type === "center" ? (
-                    <Rect {...node} fill="#dce9d5" onChange={handleDragged} />
-                  ) : (
-                    <Circle
-                      {...node}
-                      fill={getRandomColor(node.name)}
-                      onChange={handleDragged}
-                    />
-                  )}
-                  <text
-                    fontSize="12px"
-                    textAnchor="start"
-                    x={node.x - 30}
-                    y={node.y}
-                  >
+              {nodes.map((node, idx) => {
+                const temp = { ...node, size: nodesData[idx].size };
+                console.log("temp", temp);
+                return (
+                  <g key={idx}>
                     {node.type === "center" ? (
-                      <>
-                        <tspan x={node.x - 30} y={node.y - 7}>
-                          Condition:
-                        </tspan>
-                        <tspan x={node.x - 30} y={node.y + 7}>
-                          {node.name}
-                        </tspan>
-                      </>
+                      <Rect {...temp} fill="#dce9d5" onChange={handleDragged} />
                     ) : (
-                      <>
-                        <tspan x={node.x - node?.size * 0.8} y={node.y - 7}>
-                          Node: {node.name}
-                        </tspan>
-                        <tspan x={node.x - node?.size * 0.8} y={node.y + 7}>
-                          Weight: {node.size}
-                        </tspan>
-                      </>
+                      <Circle
+                        {...temp}
+                        fill={getRandomColor(node.name)}
+                        onChange={handleDragged}
+                      />
                     )}
-                  </text>
-                </g>
-              ))}
+                    <text
+                      fontSize="12px"
+                      textAnchor="start"
+                      x={node.x - 30}
+                      y={node.y}
+                    >
+                      {node.type === "center" ? (
+                        <>
+                          <tspan x={node.x - 30} y={node.y - 7}>
+                            Condition:
+                          </tspan>
+                          <tspan x={node.x - 30} y={node.y + 7}>
+                            {node.name}
+                          </tspan>
+                        </>
+                      ) : (
+                        <>
+                          <tspan x={node.x - node?.size * 0.8} y={node.y - 7}>
+                            Node: {node.name}
+                          </tspan>
+                          <tspan x={node.x - node?.size * 0.8} y={node.y + 7}>
+                            Weight: {node.size}
+                          </tspan>
+                        </>
+                      )}
+                    </text>
+                  </g>
+                );
+              })}
               {links.map((link, index) => (
                 <Line {...link} key={index} />
               ))}

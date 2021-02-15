@@ -40,7 +40,12 @@ export default function App() {
         {
           left: { id: "", name: "", size: 30, dependsOn: [] },
           right: { id: "", name: "", size: 30, dependsOn: [] },
-          center: { id: "", name: `C${tableData.length + 1}`, dependsOn: [] },
+          center: {
+            id: "",
+            name: `C${tableData.length + 1}`,
+            size: 0,
+            dependsOn: [],
+          },
           bottom: { id: "", name: "", size: 30, dependsOn: [] },
         },
       ]);

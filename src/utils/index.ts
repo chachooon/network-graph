@@ -17,6 +17,13 @@ export function getViewBox(
   return `${viewBox.cx} ${viewBox.cy} ${viewBox.width} ${viewBox.height}`;
 }
 
+function getRatePer(min: number, max: number, value: number): number {
+  var range: number = max - min;
+  var tg: number = value - min;
+  var per: number = tg / range;
+  return per * 70 + 30;
+}
+
 export function getRandomColor(str: string): string {
   const colors = [
     "#FAD2A7",
@@ -51,6 +58,9 @@ export function makeData(inputData: InputData[]): Node[] {
   const nodeTypeCheck = new Set<string>();
   const nodeMap = new Map<string, Node>();
 
+  let min = 1000,
+    max = 0;
+
   inputData.forEach((data, index) => {
     const tempData = {};
     ["left", "right", "center", "bottom"].forEach((key) => {
@@ -72,6 +82,9 @@ export function makeData(inputData: InputData[]): Node[] {
       }
       nodeMap.set(node.id, node);
       tempData[key] = node;
+      // 사이즈 최대, 최소값 업데이트
+      if (data[key].size && data[key].size < min) min = data[key].size;
+      if (data[key].size && data[key].size > max) max = data[key].size;
     });
     // Link(dependsOn) 데이터 생성
     const center = nodeMap.get(tempData["center"].id);
@@ -81,32 +94,39 @@ export function makeData(inputData: InputData[]): Node[] {
     bottom.dependsOn = [...bottom.dependsOn, tempData["center"].id];
     nodeMap.set(bottom.id, bottom);
   });
-  return Array.from(nodeMap.values());
+
+  const arr = Array.from(nodeMap.values()).map((node) => {
+    // 노드의 비중에 따라 자동으로 스케일 조정
+    if (node.size) node.size = getRatePer(min, max, node.size);
+    return node;
+  });
+  console.log("arr", arr);
+  return arr;
 }
 
 export const initialData: InputData[] = [
   {
     left: { id: "", name: "N1", size: 40, dependsOn: [] },
     right: { id: "", name: "N2", size: 45, dependsOn: [] },
-    center: { id: "", name: "C1", dependsOn: ["N1", "N2"] },
+    center: { id: "", name: "C1", size: 0, dependsOn: ["N1", "N2"] },
     bottom: { id: "", name: "N3", size: 50, dependsOn: ["C1"] },
   },
   {
     left: { id: "", name: "N3", size: 50, dependsOn: [] },
     right: { id: "", name: "N4", size: 45, dependsOn: [] },
-    center: { id: "", name: "C2", dependsOn: ["N3", "N4"] },
+    center: { id: "", name: "C2", size: 0, dependsOn: ["N3", "N4"] },
     bottom: { id: "", name: "N5", size: 40, dependsOn: ["C2"] },
   },
   {
     left: { id: "", name: "N6", size: 40, dependsOn: [] },
     right: { id: "", name: "N4", size: 40, dependsOn: [] },
-    center: { id: "", name: "C3", dependsOn: ["N6", "N4"] },
+    center: { id: "", name: "C3", size: 0, dependsOn: ["N6", "N4"] },
     bottom: { id: "", name: "N8", size: 50, dependsOn: ["C3"] },
   },
   {
     left: { id: "", name: "N5", size: 45, dependsOn: [] },
     right: { id: "", name: "N8", size: 45, dependsOn: [] },
-    center: { id: "", name: "C4", dependsOn: ["N5", "N8"] },
+    center: { id: "", name: "C4", size: 0, dependsOn: ["N5", "N8"] },
     bottom: { id: "", name: "N9", size: 50, dependsOn: ["C4"] },
   },
 ];

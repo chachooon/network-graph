@@ -7,7 +7,7 @@ interface Props extends Node {
   fill: string;
   onChange: Function;
 }
-export function Rect({ id, x, y, size = 70, fill = "#FFF", onChange }: Props) {
+export function Rect({ id, x, y, fill = "#FFF", onChange }: Props) {
   const wrapper = useRef<SVGRectElement>();
 
   useEffect(() => {
@@ -20,10 +20,10 @@ export function Rect({ id, x, y, size = 70, fill = "#FFF", onChange }: Props) {
       {x && (
         <rect
           ref={wrapper}
-          x={x - size / 2}
-          y={y - size / 2}
-          width={size}
-          height={size}
+          x={x - 70 / 2}
+          y={y - 70 / 2}
+          width={70}
+          height={70}
           fill={fill}
           stroke="#000"
           style={{ cursor: "pointer" }}
