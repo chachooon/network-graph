@@ -1,12 +1,13 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect, SVGAttributes } from "react";
+import { SimulationNodeDatum } from "d3-force";
 import * as d3 from "d3";
 import { Node } from "../model";
-
 interface Props extends Node {
   id: string;
+  fill: string;
   onChange: Function;
 }
-export function Rect({ id, x, y, size = 50, onChange }: Props) {
+export function Rect({ id, x, y, size = 70, fill = "#FFF", onChange }: Props) {
   const wrapper = useRef<SVGRectElement>();
 
   useEffect(() => {
@@ -15,19 +16,23 @@ export function Rect({ id, x, y, size = 50, onChange }: Props) {
   }, []);
 
   return (
-    <rect
-      ref={wrapper}
-      x={x}
-      y={y}
-      width={size}
-      height={size}
-      fill="#FFF"
-      stroke="#000"
-    />
+    <>
+      {x && (
+        <rect
+          ref={wrapper}
+          x={x - size / 2}
+          y={y - size / 2}
+          width={size}
+          height={size}
+          fill={fill}
+          stroke="#000"
+        />
+      )}
+    </>
   );
 }
 
-export function Circle({ id, x, y, size, onChange }: Props) {
+export function Circle({ id, x, y, size, fill = "#FFF", onChange }: Props) {
   const wrapper = useRef<SVGCircleElement>();
 
   useEffect(() => {
@@ -36,6 +41,6 @@ export function Circle({ id, x, y, size, onChange }: Props) {
   }, []);
 
   return (
-    <circle ref={wrapper} cx={x} cy={y} r={size} fill="#FFF" stroke="#000" />
+    <circle ref={wrapper} cx={x} cy={y} r={size} fill={fill} stroke="#000" />
   );
 }

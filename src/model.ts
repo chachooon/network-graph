@@ -1,10 +1,10 @@
-import { SimulationNodeDatum, SimulationLinkDatum } from "d3-force";
+import { SimulationNodeDatum } from "d3-force";
 
 export interface Node extends SimulationNodeDatum {
   id: string;
   name: string;
   size?: number;
-  type?: "rect" | "circle";
+  type?: "left" | "right" | "center" | "bottom";
   dependsOn?: string[];
 }
 

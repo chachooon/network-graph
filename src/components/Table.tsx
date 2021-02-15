@@ -27,8 +27,6 @@ export default function Table({
       <tbody>
         {tbodyData.length > 0 &&
           tbodyData.map((item: InputData, idx: number) => {
-            console.log(item);
-
             return (
               <tr key={idx}>
                 <td key="L_Node">
@@ -77,7 +75,7 @@ export default function Table({
                   <Input
                     value={item.bottom.name}
                     onChange={(e) => {
-                      onChange(idx, "F_Node");
+                      onChange(idx, "F_Node", e.target.value);
                     }}
                   />
                 </td>
