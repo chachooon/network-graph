@@ -2,28 +2,13 @@ import { css } from "@emotion/react";
 import colors from "constants/colors";
 import React, { useState } from "react";
 
-export type Props = {
-  /**
-   * 컴포넌트의 root element(`div`)에 추가되는 className입니다.
-   */
-  className?: string;
-
-  /**
-   * 에러 상태를 표시합니다.
-   */
-  hasError?: boolean;
-} & React.InputHTMLAttributes<HTMLInputElement>;
-
 function Input({
   className,
   type = "text",
-  hasError,
   onFocus,
   onBlur,
   ...inputAttrs
-}: Props) {
-  const [isFocused, setIsFocused] = useState(false);
-
+}: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div
       className={className}
@@ -41,17 +26,6 @@ function Input({
           padding: 5px;
           height: auto;
         `,
-        hasError
-          ? css`
-              caret-color: ${colors.red600};
-              background-color: rgba(183, 28, 28, 0.05);
-            `
-          : null,
-        isFocused
-          ? css`
-              background-color: rgba(25, 74, 166, 0.05);
-            `
-          : null,
       ]}
     >
       <input

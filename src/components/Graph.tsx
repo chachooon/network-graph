@@ -20,10 +20,9 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
   >([]);
 
   useEffect(() => {
-    console.log(123);
     setIsLoading(true);
     const links: SimulationLinkDatum<SimulationNodeDatum>[] = [];
-    nodes.forEach((node: Node) => {
+    nodesData.forEach((node: Node) => {
       node.dependsOn.forEach((source: string) => {
         links.push({
           source: source,
@@ -31,7 +30,7 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
         });
       });
     });
-    const simulation = forceSimulation(nodes)
+    const simulation = forceSimulation(nodesData)
       .force(
         "link",
         forceLink()
@@ -40,7 +39,7 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
           .distance(10)
       )
       .force("center", forceCenter())
-      .force("collide", forceCollide(70));
+      .force("collide", forceCollide(60));
     simulation.on("tick", () => {
       setNodes([...simulation.nodes()]);
     });
@@ -98,7 +97,11 @@ const Graph: React.FC<{ nodesData: Node[] }> = ({ nodesData }) => {
                 markerHeight={12}
                 orient="auto"
               >
-                <path d="M0,-5L10,0L0,5 L10,0 L0, -5" stroke="#000" />
+                <path
+                  d="M0,-5L10,0L0,5 L10,0 L0, -5"
+                  stroke="#000"
+                  opacity="0.7"
+                />
               </marker>
             </defs>
 

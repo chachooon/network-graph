@@ -57,8 +57,10 @@ export function makeData(inputData: InputData[]): Node[] {
       const node = {
         ...data[key],
         id: data[key].name,
+        dependsOn: [],
         type: key,
       };
+
       // 같은위치에 같은 이름의 노드인 경우 id 값 변경
       if (nodeTypeCheck.has(`${node.id}_${key}`)) {
         node.id = `${node.id}_${index}`;

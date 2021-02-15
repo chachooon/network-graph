@@ -10,16 +10,17 @@ import { makeData, initialData } from "utils";
 export default function App() {
   const [saved, setSaved] = useState<boolean>(false);
   const [tableData, setTableData] = useState<InputData[]>(initialData);
-  const [nodesData, setNodesData] = useState<Node[]>(makeData(tableData));
+  const [nodesData, setNodesData] = useState<Node[]>(null);
 
-  const handleChange = (idx: number, key: string, value: string | number) => {
+  const handleChange = (i: number, key: string, val: string | number) => {
     const nextData = [...tableData];
-    if (key === "L_Node") nextData[idx].left.name = String(value);
-    if (key === "L_Weight") nextData[idx].left.size = Number(value);
-    if (key === "R_Node") nextData[idx].right.name = String(value);
-    if (key === "R_Weight") nextData[idx].right.size = Number(value);
-    if (key === "F_Node") nextData[idx].bottom.name = String(value);
-    if (key === "F_Weight") nextData[idx].bottom.size = Number(value);
+    if (key === "L_Node") nextData[i].left.name = String(val);
+    if (key === "L_Weight") nextData[i].left.size = Number(val);
+    if (key === "R_Node") nextData[i].right.name = String(val);
+    if (key === "R_Weight") nextData[i].right.size = Number(val);
+    if (key === "Condition") nextData[i].center.name = String(val);
+    if (key === "F_Node") nextData[i].bottom.name = String(val);
+    if (key === "F_Weight") nextData[i].bottom.size = Number(val);
     setTableData(nextData);
     setSaved(true);
   };
@@ -51,12 +52,12 @@ export default function App() {
       alert("데이터 양식 올바르지 않습니다.");
     }
   };
-
+  useEffect(() => setNodesData(makeData(tableData)), []);
   return (
     <PortalProvider>
       <Container>
         <h1>그래프 구현 과제</h1>
-        <Graph nodesData={nodesData} />
+        {nodesData && <Graph nodesData={nodesData} />}
         <Table
           theadData={[
             "L_Node",
